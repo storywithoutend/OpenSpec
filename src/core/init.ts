@@ -7,17 +7,36 @@ import { ToolRegistry } from './configurators/registry.js';
 import { SlashCommandRegistry } from './configurators/slash/registry.js';
 import { OpenSpecConfig, AI_TOOLS, OPENSPEC_DIR_NAME } from './config.js';
 
+interface ConfigureToolResult {
+  toolId: string;
+  toolName: string;
+  status: 'created' | 'refreshed' | 'skipped';
+}
+
 export class InitCommand {
   async execute(targetPath: string): Promise<void> {
     const projectPath = path.resolve(targetPath);
     const openspecDir = OPENSPEC_DIR_NAME;
     const openspecPath = path.join(projectPath, openspecDir);
 
-    // Validation happens silently in the background
-    await this.validate(projectPath, openspecPath);
+    // Check if OpenSpec already exists
+    const alreadyInitialized = await FileSystemUtils.directoryExists(openspecPath);
+
+    if (alreadyInitialized) {
+      await this.executeExtend(projectPath, openspecPath);
+    } else {
+      await this.executeFresh(projectPath, openspecPath);
+    }
+  }
+
+  private async executeFresh(projectPath: string, openspecPath: string): Promise<void> {
+    // Check write permissions
+    if (!await FileSystemUtils.ensureWritePermissions(projectPath)) {
+      throw new Error(`Insufficient permissions to write to ${projectPath}`);
+    }
 
     // Get configuration (after validation to avoid prompts if validation fails)
-    const config = await this.getConfiguration();
+    const config = await this.getConfiguration([]);
 
     // Step 1: Create directory structure
     const structureSpinner = ora({ text: 'Creating OpenSpec structure...', stream: process.stdout }).start();
@@ -27,30 +46,72 @@ export class InitCommand {
 
     // Step 2: Configure AI tools
     const toolSpinner = ora({ text: 'Configuring AI tools...', stream: process.stdout }).start();
-    await this.configureAITools(projectPath, openspecDir, config.aiTools);
+    await this.configureAITools(projectPath, OPENSPEC_DIR_NAME, config.aiTools);
     toolSpinner.succeed('AI tools configured');
 
     // Success message
-    this.displaySuccessMessage(openspecDir, config);
+    this.displaySuccessMessage(OPENSPEC_DIR_NAME, config);
   }
 
-  private async validate(projectPath: string, openspecPath: string): Promise<void> {
-    // Check if OpenSpec already exists
-    if (await FileSystemUtils.directoryExists(openspecPath)) {
+  private async executeExtend(projectPath: string, openspecPath: string): Promise<void> {
+    // Still protect against missing write permissions
+    if (!await FileSystemUtils.ensureWritePermissions(projectPath)) {
+      throw new Error(`Insufficient permissions to write to ${projectPath}`);
+    }
+
+    console.log();
+    ora().info('OpenSpec is already initialized. Skipping structure creation.');
+    console.log('You can add configuration for additional AI tools.\n');
+
+    // Detect which tools are already configured
+    const alreadyConfigured = await this.detectConfiguredTools(projectPath);
+
+    // Get configuration, showing already-configured tools
+    const config = await this.getConfiguration(alreadyConfigured);
+
+    if (config.aiTools.length === 0) {
       throw new Error(
         `OpenSpec seems to already be initialized at ${openspecPath}.\n` +
         `Use 'openspec update' to update the structure.`
       );
     }
 
-    // Check write permissions
-    if (!await FileSystemUtils.ensureWritePermissions(projectPath)) {
-      throw new Error(`Insufficient permissions to write to ${projectPath}`);
-    }
+    // Configure selected tools with tracking
+    const toolSpinner = ora({ text: 'Configuring AI tools...', stream: process.stdout }).start();
+    const results = await this.configureAIToolsWithTracking(
+      projectPath, OPENSPEC_DIR_NAME, config.aiTools, alreadyConfigured
+    );
+    toolSpinner.succeed('AI tools configured');
 
+    // Summary
+    this.displayExtendSummary(results);
   }
 
-  private async getConfiguration(): Promise<OpenSpecConfig> {
+  private async detectConfiguredTools(projectPath: string): Promise<string[]> {
+    const configured: string[] = [];
+
+    for (const tool of AI_TOOLS) {
+      if (!tool.available) continue;
+
+      const configurator = ToolRegistry.get(tool.value);
+      if (configurator && await configurator.isConfigured(projectPath)) {
+        if (!configured.includes(tool.value)) {
+          configured.push(tool.value);
+        }
+      }
+
+      const slashConfigurator = SlashCommandRegistry.get(tool.value);
+      if (slashConfigurator && await slashConfigurator.isConfigured(projectPath)) {
+        if (!configured.includes(tool.value)) {
+          configured.push(tool.value);
+        }
+      }
+    }
+
+    return configured;
+  }
+
+  private async getConfiguration(alreadyConfigured: string[]): Promise<OpenSpecConfig> {
     const config: OpenSpecConfig = {
       aiTools: []
     };
@@ -58,11 +119,17 @@ export class InitCommand {
     // Single-select for better UX
     const selectedTool = await select({
       message: 'Which AI tool do you use?',
-      choices: AI_TOOLS.map(tool => ({
-        name: tool.available ? tool.name : `${tool.name} (coming soon)`,
-        value: tool.value,
-        disabled: !tool.available
-      }))
+      choices: AI_TOOLS.map(tool => {
+        const isConfigured = alreadyConfigured.includes(tool.value);
+        const configuredLabel = isConfigured ? ' (already configured)' : '';
+        return {
+          name: tool.available
+            ? `${tool.name}${configuredLabel}`
+            : `${tool.name} (coming soon)`,
+          value: tool.value,
+          disabled: !tool.available
+        };
+      })
     });
     
     config.aiTools = [selectedTool as string];
@@ -111,6 +178,76 @@ export class InitCommand {
       if (slashConfigurator && slashConfigurator.isAvailable) {
         await slashConfigurator.generateAll(projectPath, openspecDir);
       }
+    }
+  }
+
+  private async configureAIToolsWithTracking(
+    projectPath: string,
+    openspecDir: string,
+    toolIds: string[],
+    alreadyConfigured: string[]
+  ): Promise<ConfigureToolResult[]> {
+    const results: ConfigureToolResult[] = [];
+
+    for (const toolId of toolIds) {
+      const toolInfo = AI_TOOLS.find(t => t.value === toolId);
+      const toolName = toolInfo ? toolInfo.name : toolId;
+      const wasConfigured = alreadyConfigured.includes(toolId);
+
+      const configurator = ToolRegistry.get(toolId);
+      if (configurator && configurator.isAvailable) {
+        await configurator.configure(projectPath, openspecDir);
+      }
+
+      const slashConfigurator = SlashCommandRegistry.get(toolId);
+      if (slashConfigurator && slashConfigurator.isAvailable) {
+        await slashConfigurator.generateAll(projectPath, openspecDir);
+      }
+
+      results.push({
+        toolId,
+        toolName,
+        status: wasConfigured ? 'refreshed' : 'created'
+      });
+    }
+
+    return results;
+  }
+
+  private displayExtendSummary(results: ConfigureToolResult[]): void {
+    console.log();
+    console.log('── Summary ──');
+
+    const created = results.filter(r => r.status === 'created');
+    const refreshed = results.filter(r => r.status === 'refreshed');
+
+    for (const result of created) {
+      ora().succeed(`Created ${result.toolName} configuration`);
+    }
+    for (const result of refreshed) {
+      ora().succeed(`Refreshed ${result.toolName} configuration`);
+    }
+
+    // Show skipped (already configured but not selected)
+    console.log();
+    console.log(
+      'Future updates to shared content still come from \'openspec update\'.'
+    );
+
+    if (created.length > 0) {
+      const toolName = created[0].toolName;
+      console.log(`\nNext steps - Copy these prompts to ${toolName}:\n`);
+      console.log('────────────────────────────────────────────────────────────');
+      console.log('1. Populate your project context:');
+      console.log('   "Please read openspec/project.md and help me fill it out');
+      console.log('    with details about my project, tech stack, and conventions"\n');
+      console.log('2. Create your first change proposal:');
+      console.log('   "I want to add [YOUR FEATURE HERE]. Please create an');
+      console.log('    OpenSpec change proposal for this feature"\n');
+      console.log('3. Learn the OpenSpec workflow:');
+      console.log('   "Please explain the OpenSpec workflow from openspec/AGENTS.md');
+      console.log('    and how I should work with you on this project"');
+      console.log('────────────────────────────────────────────────────────────\n');
     }
   }
 

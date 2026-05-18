@@ -15,6 +15,15 @@ export abstract class SlashCommandConfigurator {
   abstract readonly toolId: string;
   abstract readonly isAvailable: boolean;
 
+  async isConfigured(projectPath: string): Promise<boolean> {
+    for (const target of this.getTargets()) {
+      if (await FileSystemUtils.fileExists(path.join(projectPath, target.path))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   getTargets(): SlashCommandTarget[] {
     return ALL_COMMANDS.map((id) => ({
       id,
