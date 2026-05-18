@@ -140,13 +140,78 @@ describe('InitCommand', () => {
       expect(archiveContent).toContain('openspec list --specs');
     });
 
-    it('should throw error if OpenSpec already exists', async () => {
+    it('should throw existing-initialization error when user declines to add a tool in extend mode', async () => {
       const openspecPath = path.join(testDir, 'openspec');
       await fs.mkdir(openspecPath, { recursive: true });
-      
+
+      vi.mocked(prompts.select).mockResolvedValue('__openspec_skip__');
+
       await expect(initCommand.execute(testDir)).rejects.toThrow(
         /OpenSpec seems to already be initialized/
       );
+    });
+
+    it('should add a new AI tool when OpenSpec is already initialized', async () => {
+      // Pre-seed an existing OpenSpec install with Claude configured.
+      const openspecPath = path.join(testDir, 'openspec');
+      await fs.mkdir(openspecPath, { recursive: true });
+      await fs.mkdir(path.join(openspecPath, 'specs'), { recursive: true });
+      await fs.mkdir(path.join(openspecPath, 'changes'), { recursive: true });
+
+      const claudePath = path.join(testDir, 'CLAUDE.md');
+      const existingClaude = `<!-- OPENSPEC:START -->\nexisting openspec block\n<!-- OPENSPEC:END -->\n\n# My instructions\n`;
+      await fs.writeFile(claudePath, existingClaude);
+
+      const claudeProposal = path.join(testDir, '.claude/commands/openspec/proposal.md');
+      await fs.mkdir(path.dirname(claudeProposal), { recursive: true });
+      await fs.writeFile(claudeProposal, 'pre-existing claude file');
+
+      // Snapshot existing-tool state to verify it is left untouched.
+      const claudeBefore = await fs.readFile(claudePath, 'utf-8');
+      const claudeProposalBefore = await fs.readFile(claudeProposal, 'utf-8');
+
+      // User picks Cursor to add as an additional tool.
+      vi.mocked(prompts.select).mockResolvedValue('cursor');
+
+      await initCommand.execute(testDir);
+
+      // Cursor files should now exist.
+      const cursorProposal = path.join(testDir, '.cursor/commands/openspec-proposal.md');
+      const cursorApply = path.join(testDir, '.cursor/commands/openspec-apply.md');
+      const cursorArchive = path.join(testDir, '.cursor/commands/openspec-archive.md');
+      expect(await fileExists(cursorProposal)).toBe(true);
+      expect(await fileExists(cursorApply)).toBe(true);
+      expect(await fileExists(cursorArchive)).toBe(true);
+
+      // Existing Claude files should be left alone (we did not pick Claude).
+      const claudeAfter = await fs.readFile(claudePath, 'utf-8');
+      const claudeProposalAfter = await fs.readFile(claudeProposal, 'utf-8');
+      expect(claudeAfter).toBe(claudeBefore);
+      expect(claudeProposalAfter).toBe(claudeProposalBefore);
+    });
+
+    it('should mark already-configured tools in the extend-mode prompt', async () => {
+      const openspecPath = path.join(testDir, 'openspec');
+      await fs.mkdir(openspecPath, { recursive: true });
+
+      const claudePath = path.join(testDir, 'CLAUDE.md');
+      await fs.writeFile(claudePath, '<!-- OPENSPEC:START -->\nblock\n<!-- OPENSPEC:END -->\n');
+
+      const selectMock = vi.mocked(prompts.select);
+      selectMock.mockResolvedValue('cursor');
+
+      await initCommand.execute(testDir);
+
+      const callArgs = selectMock.mock.calls[0][0] as any;
+      expect(callArgs.message).toMatch(/add or refresh/i);
+      const claudeChoice = callArgs.choices.find((c: any) => c.value === 'claude');
+      expect(claudeChoice.name).toMatch(/already configured/i);
+      const cursorChoice = callArgs.choices.find((c: any) => c.value === 'cursor');
+      expect(cursorChoice.name).not.toMatch(/already configured/i);
+      const skipChoice = callArgs.choices.find((c: any) => c.value === '__openspec_skip__');
+      expect(skipChoice).toBeDefined();
+      const aiderChoice = callArgs.choices.find((c: any) => c.value === 'aider');
+      expect(aiderChoice.disabled).toBe(true);
     });
 
     it('should handle non-existent target directory', async () => {

@@ -5,7 +5,9 @@ import { FileSystemUtils } from '../utils/file-system.js';
 import { TemplateManager, ProjectContext } from './templates/index.js';
 import { ToolRegistry } from './configurators/registry.js';
 import { SlashCommandRegistry } from './configurators/slash/registry.js';
-import { OpenSpecConfig, AI_TOOLS, OPENSPEC_DIR_NAME } from './config.js';
+import { OpenSpecConfig, AI_TOOLS, OPENSPEC_DIR_NAME, OPENSPEC_MARKERS } from './config.js';
+
+const SKIP_SENTINEL = '__openspec_skip__';
 
 export class InitCommand {
   async execute(targetPath: string): Promise<void> {
@@ -13,59 +15,121 @@ export class InitCommand {
     const openspecDir = OPENSPEC_DIR_NAME;
     const openspecPath = path.join(projectPath, openspecDir);
 
-    // Validation happens silently in the background
-    await this.validate(projectPath, openspecPath);
+    const extendMode = await FileSystemUtils.directoryExists(openspecPath);
 
-    // Get configuration (after validation to avoid prompts if validation fails)
-    const config = await this.getConfiguration();
+    if (!await FileSystemUtils.ensureWritePermissions(projectPath)) {
+      throw new Error(`Insufficient permissions to write to ${projectPath}`);
+    }
 
-    // Step 1: Create directory structure
-    const structureSpinner = ora({ text: 'Creating OpenSpec structure...', stream: process.stdout }).start();
-    await this.createDirectoryStructure(openspecPath);
-    await this.generateFiles(openspecPath, config);
-    structureSpinner.succeed('OpenSpec structure created');
+    if (extendMode) {
+      console.log(`OpenSpec is already initialized at ${openspecPath}.`);
+      console.log('Skipping base structure; this command will only manage AI tool configuration files.\n');
+    }
 
-    // Step 2: Configure AI tools
-    const toolSpinner = ora({ text: 'Configuring AI tools...', stream: process.stdout }).start();
-    await this.configureAITools(projectPath, openspecDir, config.aiTools);
-    toolSpinner.succeed('AI tools configured');
+    const configuredTools = extendMode
+      ? await this.detectConfiguredTools(projectPath)
+      : new Set<string>();
 
-    // Success message
-    this.displaySuccessMessage(openspecDir, config);
-  }
+    const config = await this.getConfiguration(extendMode, configuredTools);
 
-  private async validate(projectPath: string, openspecPath: string): Promise<void> {
-    // Check if OpenSpec already exists
-    if (await FileSystemUtils.directoryExists(openspecPath)) {
+    if (config.aiTools.length === 0) {
       throw new Error(
         `OpenSpec seems to already be initialized at ${openspecPath}.\n` +
         `Use 'openspec update' to update the structure.`
       );
     }
 
-    // Check write permissions
-    if (!await FileSystemUtils.ensureWritePermissions(projectPath)) {
-      throw new Error(`Insufficient permissions to write to ${projectPath}`);
+    if (!extendMode) {
+      const structureSpinner = ora({ text: 'Creating OpenSpec structure...', stream: process.stdout }).start();
+      await this.createDirectoryStructure(openspecPath);
+      await this.generateFiles(openspecPath, config);
+      structureSpinner.succeed('OpenSpec structure created');
     }
 
+    const selectedToolId = config.aiTools[0];
+    const wasAlreadyConfigured = extendMode && configuredTools.has(selectedToolId);
+    const toolSpinner = ora({
+      text: wasAlreadyConfigured ? 'Refreshing AI tool files...' : 'Configuring AI tools...',
+      stream: process.stdout
+    }).start();
+    await this.configureAITools(projectPath, openspecDir, config.aiTools);
+    toolSpinner.succeed(wasAlreadyConfigured ? 'AI tool files refreshed' : 'AI tools configured');
+
+    this.displaySuccessMessage(openspecDir, config, { extendMode, wasAlreadyConfigured });
   }
 
-  private async getConfiguration(): Promise<OpenSpecConfig> {
+  private async detectConfiguredTools(projectPath: string): Promise<Set<string>> {
+    const configured = new Set<string>();
+
+    for (const tool of AI_TOOLS) {
+      if (!tool.available) continue;
+
+      const configurator = ToolRegistry.get(tool.value);
+      if (configurator && configurator.isAvailable) {
+        const filePath = path.join(projectPath, configurator.configFileName);
+        if (await FileSystemUtils.fileExists(filePath)) {
+          const content = await FileSystemUtils.readFile(filePath);
+          if (content.includes(OPENSPEC_MARKERS.start)) {
+            configured.add(tool.value);
+            continue;
+          }
+        }
+      }
+
+      const slashConfigurator = SlashCommandRegistry.get(tool.value);
+      if (slashConfigurator && slashConfigurator.isAvailable) {
+        for (const target of slashConfigurator.getTargets()) {
+          if (await FileSystemUtils.fileExists(path.join(projectPath, target.path))) {
+            configured.add(tool.value);
+            break;
+          }
+        }
+      }
+    }
+
+    return configured;
+  }
+
+  private async getConfiguration(
+    extendMode: boolean,
+    configuredTools: Set<string>
+  ): Promise<OpenSpecConfig> {
     const config: OpenSpecConfig = {
       aiTools: []
     };
 
-    // Single-select for better UX
-    const selectedTool = await select({
-      message: 'Which AI tool do you use?',
-      choices: AI_TOOLS.map(tool => ({
-        name: tool.available ? tool.name : `${tool.name} (coming soon)`,
+    const choices: Array<{ name: string; value: string; disabled: boolean }> = AI_TOOLS.map(tool => {
+      let label = tool.name;
+      if (!tool.available) {
+        label += ' (coming soon)';
+      } else if (extendMode && configuredTools.has(tool.value)) {
+        label += ' (already configured — selecting will refresh files)';
+      }
+      return {
+        name: label,
         value: tool.value,
         disabled: !tool.available
-      }))
+      };
     });
-    
-    config.aiTools = [selectedTool as string];
+
+    if (extendMode) {
+      choices.push({
+        name: "Skip — don't add anything",
+        value: SKIP_SENTINEL,
+        disabled: false
+      });
+    }
+
+    const selectedTool = await select({
+      message: extendMode
+        ? 'Which AI tool would you like to add or refresh?'
+        : 'Which AI tool do you use?',
+      choices
+    });
+
+    if (selectedTool !== SKIP_SENTINEL) {
+      config.aiTools = [selectedTool as string];
+    }
 
     return config;
   }
@@ -89,13 +153,13 @@ export class InitCommand {
     };
 
     const templates = TemplateManager.getTemplates(context);
-    
+
     for (const template of templates) {
       const filePath = path.join(openspecPath, template.path);
-      const content = typeof template.content === 'function' 
-        ? template.content(context) 
+      const content = typeof template.content === 'function'
+        ? template.content(context)
         : template.content;
-      
+
       await FileSystemUtils.writeFile(filePath, content);
     }
   }
@@ -114,15 +178,29 @@ export class InitCommand {
     }
   }
 
-  private displaySuccessMessage(openspecDir: string, config: OpenSpecConfig): void {
+  private displaySuccessMessage(
+    openspecDir: string,
+    config: OpenSpecConfig,
+    opts: { extendMode: boolean; wasAlreadyConfigured: boolean }
+  ): void {
     console.log(); // Empty line for spacing
-    ora().succeed('OpenSpec initialized successfully!');
-    
-    // Get the selected tool name for display
+
     const selectedToolId = config.aiTools[0];
     const selectedTool = AI_TOOLS.find(t => t.value === selectedToolId);
     const toolName = selectedTool ? selectedTool.name : 'your AI assistant';
-    
+
+    if (opts.extendMode) {
+      if (opts.wasAlreadyConfigured) {
+        ora().succeed(`Refreshed ${toolName} configuration`);
+      } else {
+        ora().succeed(`Added ${toolName} configuration to existing OpenSpec project`);
+      }
+      console.log(`\nShared OpenSpec content is still managed via 'openspec update'.\n`);
+      return;
+    }
+
+    ora().succeed('OpenSpec initialized successfully!');
+
     console.log(`\nNext steps - Copy these prompts to ${toolName}:\n`);
     console.log('────────────────────────────────────────────────────────────');
     console.log('1. Populate your project context:');
