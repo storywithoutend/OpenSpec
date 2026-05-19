@@ -140,13 +140,71 @@ describe('InitCommand', () => {
       expect(archiveContent).toContain('openspec list --specs');
     });
 
-    it('should throw error if OpenSpec already exists', async () => {
+    it('should enter extend mode and add a new tool when OpenSpec already exists', async () => {
+      // First init with Claude
+      vi.mocked(prompts.select).mockResolvedValueOnce('claude');
+      await initCommand.execute(testDir);
+
+      // Rerun init, selecting Cursor
+      vi.mocked(prompts.select).mockResolvedValueOnce('cursor');
+      await initCommand.execute(testDir);
+
+      // Claude files should still exist
+      const claudePath = path.join(testDir, 'CLAUDE.md');
+      expect(await fileExists(claudePath)).toBe(true);
+
+      // Cursor slash command files should now exist
+      const cursorProposal = path.join(testDir, '.cursor/commands/openspec-proposal.md');
+      expect(await fileExists(cursorProposal)).toBe(true);
+
+      // OpenSpec structure should not be duplicated
+      const agentsContent = await fs.readFile(path.join(testDir, 'openspec/AGENTS.md'), 'utf-8');
+      expect(agentsContent).toContain('OpenSpec Instructions');
+    });
+
+    it('should throw error when user declines to add a tool in extend mode', async () => {
       const openspecPath = path.join(testDir, 'openspec');
       await fs.mkdir(openspecPath, { recursive: true });
-      
+
+      vi.mocked(prompts.select).mockResolvedValueOnce('none');
+
       await expect(initCommand.execute(testDir)).rejects.toThrow(
         /OpenSpec seems to already be initialized/
       );
+    });
+
+    it('should show already configured tools in extend mode prompt', async () => {
+      // First init with Claude
+      vi.mocked(prompts.select).mockResolvedValueOnce('claude');
+      await initCommand.execute(testDir);
+
+      // Rerun init
+      const selectMock = vi.mocked(prompts.select);
+      selectMock.mockResolvedValueOnce('cursor');
+      await initCommand.execute(testDir);
+
+      // Check the second call's choices
+      const secondCall = selectMock.mock.calls[1]![0];
+      const choices = secondCall.choices as Array<{ name: string; value: string; disabled: boolean }>;
+      const claudeChoice = choices.find(c => c.value === 'claude');
+      expect(claudeChoice?.name).toContain('already configured');
+      const noneChoice = choices.find(c => c.value === 'none');
+      expect(noneChoice).toBeDefined();
+      expect(secondCall.message).toBe('Which AI tool would you like to add?');
+    });
+
+    it('should display extend summary with created tool', async () => {
+      const openspecPath = path.join(testDir, 'openspec');
+      await fs.mkdir(openspecPath, { recursive: true });
+
+      vi.mocked(prompts.select).mockResolvedValueOnce('cursor');
+      const logSpy = vi.spyOn(console, 'log');
+
+      await initCommand.execute(testDir);
+
+      const calls = logSpy.mock.calls.flat().join('\n');
+      expect(calls).toContain('Created: Cursor');
+      expect(calls).toContain('openspec update');
     });
 
     it('should handle non-existent target directory', async () => {
