@@ -140,9 +140,11 @@ describe('InitCommand', () => {
       expect(archiveContent).toContain('openspec list --specs');
     });
 
-    it('should throw error if OpenSpec already exists', async () => {
+    it('should throw error when user declines to add tools in extend mode', async () => {
       const openspecPath = path.join(testDir, 'openspec');
       await fs.mkdir(openspecPath, { recursive: true });
+      
+      vi.mocked(prompts.select).mockResolvedValue('_none');
       
       await expect(initCommand.execute(testDir)).rejects.toThrow(
         /OpenSpec seems to already be initialized/
@@ -193,6 +195,91 @@ describe('InitCommand', () => {
       // When other tools are added, we'd test their specific configurations here
       const claudePath = path.join(testDir, 'CLAUDE.md');
       expect(await fileExists(claudePath)).toBe(true);
+    });
+  });
+
+  describe('extend mode', () => {
+    it('should add Cursor files when rerunning init on a Claude-configured project', async () => {
+      // First init with Claude
+      vi.mocked(prompts.select).mockResolvedValueOnce('claude');
+      await initCommand.execute(testDir);
+
+      // Verify Claude files exist
+      expect(await fileExists(path.join(testDir, 'CLAUDE.md'))).toBe(true);
+      expect(await fileExists(path.join(testDir, '.claude/commands/openspec/proposal.md'))).toBe(true);
+
+      // Rerun init to add Cursor
+      vi.mocked(prompts.select).mockResolvedValueOnce('cursor');
+      await initCommand.execute(testDir);
+
+      // Verify Cursor files were added
+      expect(await fileExists(path.join(testDir, '.cursor/commands/openspec-proposal.md'))).toBe(true);
+      expect(await fileExists(path.join(testDir, '.cursor/commands/openspec-apply.md'))).toBe(true);
+      expect(await fileExists(path.join(testDir, '.cursor/commands/openspec-archive.md'))).toBe(true);
+
+      // Verify Claude files still exist
+      expect(await fileExists(path.join(testDir, 'CLAUDE.md'))).toBe(true);
+      expect(await fileExists(path.join(testDir, '.claude/commands/openspec/proposal.md'))).toBe(true);
+    });
+
+    it('should not recreate base structure in extend mode', async () => {
+      // First init
+      vi.mocked(prompts.select).mockResolvedValueOnce('claude');
+      await initCommand.execute(testDir);
+
+      // Modify AGENTS.md to verify it's not overwritten
+      const agentsPath = path.join(testDir, 'openspec', 'AGENTS.md');
+      const originalContent = await fs.readFile(agentsPath, 'utf-8');
+      const modifiedContent = originalContent + '\n// Custom modification';
+      await fs.writeFile(agentsPath, modifiedContent);
+
+      // Rerun init to add Cursor
+      vi.mocked(prompts.select).mockResolvedValueOnce('cursor');
+      await initCommand.execute(testDir);
+
+      // AGENTS.md should not have been overwritten
+      const currentContent = await fs.readFile(agentsPath, 'utf-8');
+      expect(currentContent).toContain('Custom modification');
+    });
+
+    it('should show extend mode message when OpenSpec already exists', async () => {
+      const openspecPath = path.join(testDir, 'openspec');
+      await fs.mkdir(openspecPath, { recursive: true });
+      
+      vi.mocked(prompts.select).mockResolvedValue('cursor');
+      const logSpy = vi.spyOn(console, 'log');
+      
+      await initCommand.execute(testDir);
+      
+      const calls = logSpy.mock.calls.flat().join('\n');
+      expect(calls).toContain('extend mode');
+    });
+
+    it('should display summary with created and skipped tools in extend mode', async () => {
+      // First init with Claude
+      vi.mocked(prompts.select).mockResolvedValueOnce('claude');
+      await initCommand.execute(testDir);
+
+      // Rerun init to add Cursor
+      vi.mocked(prompts.select).mockResolvedValueOnce('cursor');
+      const logSpy = vi.spyOn(console, 'log');
+      
+      await initCommand.execute(testDir);
+      
+      const calls = logSpy.mock.calls.flat().join('\n');
+      expect(calls).toContain('Created');
+      expect(calls).toContain('Skipped');
+    });
+
+    it('should throw error when user declines to add any tool in extend mode', async () => {
+      const openspecPath = path.join(testDir, 'openspec');
+      await fs.mkdir(openspecPath, { recursive: true });
+      
+      vi.mocked(prompts.select).mockResolvedValue('_none');
+      
+      await expect(initCommand.execute(testDir)).rejects.toThrow(
+        /OpenSpec seems to already be initialized/
+      );
     });
   });
 
