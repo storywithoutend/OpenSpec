@@ -751,3 +751,73 @@ _skipped_
   - (run 3) Zero selections in extend mode exits 0 with empty summary instead of throwing 'already initialized' error
   - (run 3) 3 test failures at runtime confirm correctness issues
   - (run 3) extend mode skips FileSystemUtils.ensureWritePermissions check - potential permission issue
+
+## 2026-05-19T19:51:39 — add-multi-agent-init / opus-4.6 (3 runs)
+
+- worktree: `/Users/davidchu/projects/storywithoutend/eval-runs/add-multi-agent-init--opus-4.6`
+- baseline: `f72abf5e0ad567154c045de1e40c31eb9feb38fb`
+- before_sha: `7b0f4947540812616f643b42a2235ce4d41c5806` | after_sha: `20b2fee74984add9b8e6ea74e1b3955bf59d1645`
+- judge: eval-rubric-judge sub-agent
+
+### Deterministic eval
+
+- exit_code: 0
+- duration_s: 2.3
+- tests_passed: 157
+- tests_failed: 0
+- tests_total: 157
+- files_passed: 22
+- files_failed: 0
+- files_total: 22
+
+### LLM-as-judge — 3 runs
+
+| Dimension | Run 1 | Run 2 | Run 3 | Mean | Range |
+|---|---|---|---|---|---|
+| spec_compliance | 2 | 2 | 2 | 2.00 | 2–2 |
+| task_coverage | 3 | 3 | 3 | 3.00 | 3–3 |
+| scope_discipline | 3 | 3 | 3 | 3.00 | 3–3 |
+| convention_fit | 3 | 3 | 3 | 3.00 | 3–3 |
+| correctness | 3 | 3 | 3 | 3.00 | 3–3 |
+| **Total** | 14/20 | 14/20 | 14/20 | **14.00** | 14–14 |
+
+**Run 1**: The candidate correctly implements the extend-mode concept: detecting an existing init, showing an info banner, presenting already-configured markers, generating files, summarizing outcomes, and throwing the original error when the user declines. The tests are well-targeted. The primary gap is the use of single-select instead of multi-select, which is the core of 'multi-agent init' — the proposal's name and golden's implementation both center on selecting multiple tools at once via a while-loop sentinel pattern. Additionally, detectConfiguredTools is narrower than the golden's implementation, potentially causing incorrect 'Created vs Refreshed' classification. These are material functional differences that make the candidate a partial rather than full implementation of the spec.
+
+**Run 2**: The candidate correctly implements the core extend-mode concept: detecting existing openspec/, skipping scaffolding, showing tool choices with already-configured markers, generating files, and throwing the original error on decline. The key divergence from the spec/golden is the single-select prompt approach vs the required multi-select while-loop with '__done__' sentinel — this means users can only add one tool per extend-mode run. The summary display is also simplified to single-tool output rather than the four-bucket categorization. The detectConfiguredTools implementation is narrower than required. These are material functional gaps, but the basic feature works correctly for the single-tool case and all tests pass.
+
+**Run 3**: The candidate correctly implements the extend-mode detection, skip-structure flow, already-configured marking, decline-throws-original-error behavior, and a basic summary. The core intent of 'extend mode for openspec init' is present. The most significant gap is that 'multi-agent init' implies multi-select (adding multiple tools in one run), but the candidate uses single-select — users can only add one tool per extend invocation. Additionally, detectConfiguredTools is narrower than the spec requires (misses ToolRegistry configFileName checks), and the four-bucket summary is collapsed to three buckets. Tests are well-structured and cover the key new scenarios. Overall this is a solid partial implementation that gets the shape right but misses the multi-select requirement that is central to the feature name.
+
+#### Issues (union across runs)
+
+- **spec_compliance.missing_requirements**:
+  - (run 1) Multi-select tool selection (pick multiple tools per invocation) — candidate uses single-select with 'none' sentinel
+  - (run 1) detectConfiguredTools must check ToolRegistry configFileName (e.g., CLAUDE.md) in addition to SlashCommandRegistry paths
+  - (run 1) Four-bucket summary output: created, refreshed, skippedExisting, skipped — candidate only tracks singular selected tool outcome plus skipped-configured
+  - (run 2) Multi-select (while-loop) prompt for tool selection instead of single-select with 'none'
+  - (run 2) Four-bucket summary (created, refreshed, skippedExisting, skipped) instead of simplified single-tool summary
+  - (run 2) detectConfiguredTools should check both SlashCommandRegistry targets AND ToolRegistry configFileName
+  - (run 3) Multi-select prompt (select multiple tools per run) — candidate only allows single selection
+  - (run 3) detectConfiguredTools must check ToolRegistry configFileName (e.g., CLAUDE.md), not just SlashCommandRegistry paths
+  - (run 3) Summary must include all four buckets: created, refreshed, skippedExisting, skipped (not configured)
+- **task_coverage.missed_tasks**:
+  - (run 1) Multi-tool selection in a single extend-mode invocation (tasks imply selecting multiple tools at once)
+  - (run 2) Multi-select tool prompt implementation (tasks likely specified while-loop multi-select)
+  - (run 3) Multi-select support (per 'multi-agent init' framing) is absent — only single tool can be added per run
+- **scope_discipline.out_of_scope_changes**:
+  - (run 1) Removal of validate() helper and inlining its logic — minor scope creep but not harmful
+  - (run 2) Elimination of validate() helper (minor in-scope refactor but slightly beyond the minimal change needed)
+  - (run 3) Elimination of validate() helper (minor refactor, borderline in-scope)
+- **convention_fit.examples**:
+  - (run 1) Uses inquirer single-select list instead of golden's while-loop multi-select pattern — different control-flow convention
+  - (run 1) displayExtendSummary handles only one tool at a time rather than array-based summary used elsewhere in the command
+  - (run 2) Single-select with 'none' sentinel vs while-loop multi-select pattern used by golden
+  - (run 2) displayExtendSummary naming and structure aligns with existing displaySuccessMessage convention
+  - (run 3) Single-select prompt deviates from the golden's while-loop multi-select, which is the intended pattern for 'multi-agent init'
+  - (run 3) displayExtendSummary uses singular 'Created: X' / 'Refreshed: X' rather than the array-based multi-bucket summary
+- **correctness.likely_bugs**:
+  - (run 1) detectConfiguredTools misses ToolRegistry configFileName check — tool may be falsely reported as 'Created' when it was already 'Refreshed'
+  - (run 1) Single-select means if user wants to add both Cursor and Claude in extend mode they must run init twice — functional limitation but not a crash
+  - (run 2) detectConfiguredTools misses tools configured via ToolRegistry configFileName (e.g., CLAUDE.md) — could incorrectly show them as unconfigured
+  - (run 2) Single-select means user cannot add multiple tools in one extend-mode invocation — functional limitation vs spec intent
+  - (run 3) detectConfiguredTools may miss some configured tools (e.g., CLAUDE.md via ToolRegistry) since it only checks SlashCommandRegistry first target path
+  - (run 3) Single-select means if user wants to add multiple tools, they must run init multiple times — this is a functional limitation not a crash bug
