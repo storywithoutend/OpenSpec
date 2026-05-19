@@ -6,7 +6,8 @@ import { InitCommand } from '../../src/core/init.js';
 import * as prompts from '@inquirer/prompts';
 
 vi.mock('@inquirer/prompts', () => ({
-  select: vi.fn()
+  select: vi.fn(),
+  checkbox: vi.fn()
 }));
 
 describe('InitCommand', () => {
@@ -29,7 +30,7 @@ describe('InitCommand', () => {
 
   describe('execute', () => {
     it('should create OpenSpec directory structure', async () => {
-      vi.mocked(prompts.select).mockResolvedValue('claude');
+      vi.mocked(prompts.checkbox).mockResolvedValue(['claude']);
       
       await initCommand.execute(testDir);
       
@@ -41,7 +42,7 @@ describe('InitCommand', () => {
     });
 
     it('should create AGENTS.md and project.md', async () => {
-      vi.mocked(prompts.select).mockResolvedValue('claude');
+      vi.mocked(prompts.checkbox).mockResolvedValue(['claude']);
 
       await initCommand.execute(testDir);
 
@@ -57,7 +58,7 @@ describe('InitCommand', () => {
     });
 
     it('should create CLAUDE.md when Claude Code is selected', async () => {
-      vi.mocked(prompts.select).mockResolvedValue('claude');
+      vi.mocked(prompts.checkbox).mockResolvedValue(['claude']);
       
       await initCommand.execute(testDir);
       
@@ -71,7 +72,7 @@ describe('InitCommand', () => {
     });
 
     it('should update existing CLAUDE.md with markers', async () => {
-      vi.mocked(prompts.select).mockResolvedValue('claude');
+      vi.mocked(prompts.checkbox).mockResolvedValue(['claude']);
       
       const claudePath = path.join(testDir, 'CLAUDE.md');
       const existingContent = '# My Project Instructions\nCustom instructions here';
@@ -86,8 +87,8 @@ describe('InitCommand', () => {
       expect(updatedContent).toContain('Custom instructions here');
     });
 
-    it('should create Claude slash command files with templates', async () => {
-      vi.mocked(prompts.select).mockResolvedValue('claude');
+    it('should create Claude dash command files with templates', async () => {
+      vi.mocked(prompts.checkbox).mockResolvedValue(['claude']);
 
       await initCommand.execute(testDir);
 
@@ -114,8 +115,8 @@ describe('InitCommand', () => {
       expect(archiveContent).toContain('`--skip-specs` only for tooling-only work');
     });
 
-    it('should create Cursor slash command files with templates', async () => {
-      vi.mocked(prompts.select).mockResolvedValue('cursor');
+    it('should create Cursor dash command files with templates', async () => {
+      vi.mocked(prompts.checkbox).mockResolvedValue(['cursor']);
 
       await initCommand.execute(testDir);
 
@@ -140,17 +141,8 @@ describe('InitCommand', () => {
       expect(archiveContent).toContain('openspec list --specs');
     });
 
-    it('should throw error if OpenSpec already exists', async () => {
-      const openspecPath = path.join(testDir, 'openspec');
-      await fs.mkdir(openspecPath, { recursive: true });
-      
-      await expect(initCommand.execute(testDir)).rejects.toThrow(
-        /OpenSpec seems to already be initialized/
-      );
-    });
-
     it('should handle non-existent target directory', async () => {
-      vi.mocked(prompts.select).mockResolvedValue('claude');
+      vi.mocked(prompts.checkbox).mockResolvedValue(['claude']);
       
       const newDir = path.join(testDir, 'new-project');
       await initCommand.execute(newDir);
@@ -160,7 +152,7 @@ describe('InitCommand', () => {
     });
 
     it('should display success message with selected tool name', async () => {
-      vi.mocked(prompts.select).mockResolvedValue('claude');
+      vi.mocked(prompts.checkbox).mockResolvedValue(['claude']);
       const logSpy = vi.spyOn(console, 'log');
       
       await initCommand.execute(testDir);
@@ -170,39 +162,129 @@ describe('InitCommand', () => {
     });
   });
 
+  describe('extend mode', () => {
+    it('should NOT throw error when OpenSpec already exists (extend mode)', async () => {
+      // Create existing openspec directory
+      const openspecPath = path.join(testDir, 'openspec');
+      await fs.mkdir(openspecPath, { recursive: true });
+      await fs.mkdir(path.join(openspecPath, 'specs'), { recursive: true });
+      await fs.mkdir(path.join(openspecPath, 'changes'), { recursive: true });
+      
+      vi.mocked(prompts.checkbox).mockResolvedValue(['cursor']);
+      
+      // Should not throw - it enters extend mode
+      await expect(initCommand.execute(testDir)).resolves.not.toThrow();
+    });
+
+    it('should skip creating directory structure in extend mode', async () => {
+      const openspecPath = path.join(testDir, 'openspec');
+      await fs.mkdir(openspecPath, { recursive: true });
+      
+      vi.mocked(prompts.checkbox).mockResolvedValue(['cursor']);
+      await initCommand.execute(testDir);
+      
+      // openspec/ exists but only because we created it, init skips recreating
+      // Cursor files should be created
+      const cursorProposal = path.join(testDir, '.cursor/commands/openspec-proposal.md');
+      expect(await fileExists(cursorProposal)).toBe(true);
+    });
+
+    it('should configure new tool when one is already present', async () => {
+      // Set up: Claude is already configured
+      const openspecPath = path.join(testDir, 'openspec');
+      await fs.mkdir(openspecPath, { recursive: true });
+      await fs.mkdir(path.join(openspecPath, 'specs'), { recursive: true });
+      
+      // Create CLAUDE.md to simulate existing Claude config
+      await fs.writeFile(path.join(testDir, 'CLAUDE.md'), '# Existing Claude config');
+
+      // User selects cursor (new tool)
+      vi.mocked(prompts.checkbox).mockResolvedValue(['cursor']);
+      await initCommand.execute(testDir);
+
+      // Cursor files should be created
+      const cursorProposal = path.join(testDir, '.cursor/commands/openspec-proposal.md');
+      expect(await fileExists(cursorProposal)).toBe(true);
+
+      // CLAUDE.md should still exist (unmodified since cursor was selected)
+      expect(await fileExists(path.join(testDir, 'CLAUDE.md'))).toBe(true);
+    });
+
+    it('should return gracefully when user declines to add any tools in extend mode', async () => {
+      const openspecPath = path.join(testDir, 'openspec');
+      await fs.mkdir(openspecPath, { recursive: true });
+
+      // User selects nothing (simulates declining)
+      vi.mocked(prompts.checkbox).mockResolvedValue([]);
+      
+      const logSpy = vi.spyOn(console, 'log');
+      await expect(initCommand.execute(testDir)).resolves.not.toThrow();
+      
+      const calls = logSpy.mock.calls.flat().join('\n');
+      expect(calls).toContain('already initialized');
+    });
+
+    it('should allow refreshing an already-configured tool', async () => {
+      const openspecPath = path.join(testDir, 'openspec');
+      await fs.mkdir(openspecPath, { recursive: true });
+      
+      // Simulate Claude being configured
+      await fs.writeFile(path.join(testDir, 'CLAUDE.md'), '# Existing');
+      
+      // User selects Claude again (should refresh)
+      vi.mocked(prompts.checkbox).mockResolvedValue(['claude']);
+
+      await initCommand.execute(testDir);
+
+      // CLAUDE.md should be updated with markers (refreshed)
+      const claudeContent = await fs.readFile(path.join(testDir, 'CLAUDE.md'), 'utf-8');
+      expect(claudeContent).toContain('<!-- OPENSPEC:START -->');
+      expect(claudeContent).toContain('OpenSpec Project');
+    });
+  });
+
   describe('AI tool selection', () => {
-    it('should prompt for AI tool selection', async () => {
-      const selectMock = vi.mocked(prompts.select);
-      selectMock.mockResolvedValue('claude');
+    it('should prompt for AI tool selection using checkbox', async () => {
+      vi.mocked(prompts.checkbox).mockResolvedValue(['claude']);
       
       await initCommand.execute(testDir);
       
-      expect(selectMock).toHaveBeenCalledWith(
+      expect(prompts.checkbox).toHaveBeenCalledWith(
         expect.objectContaining({
-          message: 'Which AI tool do you use?'
+          message: expect.any(String),
         })
       );
     });
 
     it('should handle different AI tool selections', async () => {
-      // For now, only Claude is available, but test the structure
-      vi.mocked(prompts.select).mockResolvedValue('claude');
+      vi.mocked(prompts.checkbox).mockResolvedValue(['claude']);
       
       await initCommand.execute(testDir);
       
-      // When other tools are added, we'd test their specific configurations here
       const claudePath = path.join(testDir, 'CLAUDE.md');
       expect(await fileExists(claudePath)).toBe(true);
+    });
+
+    it('should handle cursor tool selection without existing CLAUDE.md', async () => {
+      vi.mocked(prompts.checkbox).mockResolvedValue(['cursor']);
+      
+      await initCommand.execute(testDir);
+      
+      // CLAUDE.md should NOT be created
+      const claudePath = path.join(testDir, 'CLAUDE.md');
+      expect(await fileExists(claudePath)).toBe(false);
+      
+      // Cursor files should be created
+      const cursorProposal = path.join(testDir, '.cursor/commands/openspec-proposal.md');
+      expect(await fileExists(cursorProposal)).toBe(true);
     });
   });
 
   describe('error handling', () => {
     it('should provide helpful error for insufficient permissions', async () => {
-      // This is tricky to test cross-platform, but we can test the error message
       const readOnlyDir = path.join(testDir, 'readonly');
       await fs.mkdir(readOnlyDir);
       
-      // Mock the permission check to fail
       const originalCheck = fs.writeFile;
       vi.spyOn(fs, 'writeFile').mockImplementation(async (filePath: any, ...args: any[]) => {
         if (typeof filePath === 'string' && filePath.includes('.openspec-test-')) {
