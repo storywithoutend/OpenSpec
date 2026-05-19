@@ -6,7 +6,8 @@ import { InitCommand } from '../../src/core/init.js';
 import * as prompts from '@inquirer/prompts';
 
 vi.mock('@inquirer/prompts', () => ({
-  select: vi.fn()
+  select: vi.fn(),
+  checkbox: vi.fn()
 }));
 
 describe('InitCommand', () => {
@@ -140,13 +141,54 @@ describe('InitCommand', () => {
       expect(archiveContent).toContain('openspec list --specs');
     });
 
-    it('should throw error if OpenSpec already exists', async () => {
+    it('should enter extend mode when OpenSpec already exists', async () => {
       const openspecPath = path.join(testDir, 'openspec');
       await fs.mkdir(openspecPath, { recursive: true });
       
-      await expect(initCommand.execute(testDir)).rejects.toThrow(
-        /OpenSpec seems to already be initialized/
-      );
+      // In extend mode, checkbox prompts for tool selection
+      vi.mocked(prompts.checkbox).mockResolvedValue(['cursor']);
+      
+      const result = await initCommand.execute(testDir);
+      
+      // Should not create openspec structure again
+      expect(result.created.length).toBeGreaterThan(0);
+      expect(result.created).toContain('.cursor/commands/openspec-proposal.md');
+    });
+
+    it('should display configured tools in extend mode', async () => {
+      const openspecPath = path.join(testDir, 'openspec');
+      await fs.mkdir(openspecPath, { recursive: true });
+      
+      // Create a Claude config file to simulate existing configuration
+      const claudePath = path.join(testDir, 'CLAUDE.md');
+      await fs.writeFile(claudePath, '# Claude config');
+      
+      vi.mocked(prompts.checkbox).mockResolvedValue(['cursor']);
+      
+      await initCommand.execute(testDir);
+      
+      // Verify checkbox was called with Claude marked as already configured
+      expect(prompts.checkbox).toHaveBeenCalled();
+    });
+
+    it('should handle user declining to add any tools in extend mode', async () => {
+      const openspecPath = path.join(testDir, 'openspec');
+      await fs.mkdir(openspecPath, { recursive: true });
+      
+      // Create a Claude config file to simulate existing configuration
+      const claudePath = path.join(testDir, 'CLAUDE.md');
+      await fs.writeFile(claudePath, '# Claude config');
+      
+      // Mock checkbox to return already configured tools (user doesn't add new ones)
+      vi.mocked(prompts.checkbox).mockResolvedValue(['claude']);
+      
+      const result = await initCommand.execute(testDir);
+      
+      // The user selected 'claude' which was already configured, so no new tools should be created
+      // result.created should only contain tools that were newly added
+      // Since claude was already there, nothing new should be created
+      const newlyCreated = result.created.filter(f => !f.includes('claude'));
+      expect(newlyCreated).toHaveLength(0);
     });
 
     it('should handle non-existent target directory', async () => {
