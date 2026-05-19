@@ -1,0 +1,982 @@
+[
+  {
+    "slug": "add-update-command",
+    "archive_date": "2025-01-11",
+    "change_folder": "openspec/changes/add-update-command",
+    "archive_folder": "openspec/changes/archive/2025-01-11-add-update-command",
+    "before_sha": "e40abe1f208fd9f6f9e7365e36ec94766a885067",
+    "after_sha": "edf6873afa66f927acd98db9c1350361e0fc4771",
+    "archive_sha": "a490dbbc781b7c593676a6e7a05b6df306279e42",
+    "implementation_commits": [
+      {
+        "sha": "edf6873afa66f927acd98db9c1350361e0fc4771",
+        "subject": "feat(cli): add update command to refresh OpenSpec instructions and CLAUDE.md via markers"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/add-update-command/design.md",
+      "openspec/changes/add-update-command/proposal.md",
+      "openspec/changes/add-update-command/specs/cli-update/spec.md",
+      "openspec/changes/add-update-command/tasks.md"
+    ],
+    "golden_code_paths": [
+      "src/cli/index.ts",
+      "src/core/update.ts"
+    ]
+  },
+  {
+    "slug": "add-complexity-guidelines",
+    "archive_date": "2025-08-11",
+    "change_folder": "openspec/changes/add-complexity-guidelines",
+    "archive_folder": "openspec/changes/archive/2025-08-11-add-complexity-guidelines",
+    "before_sha": "326cb0febcd0f344afe487eb820b30b59da82836",
+    "after_sha": "9d425865c173049feeeb1f26b2caaad598bd185e",
+    "archive_sha": "581a681a47a0d5d533e48bc04769cc4622f1a541",
+    "implementation_commits": [
+      {
+        "sha": "9d425865c173049feeeb1f26b2caaad598bd185e",
+        "subject": "docs(openspec): add complexity management guidelines and update templates"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/add-complexity-guidelines/proposal.md",
+      "openspec/changes/add-complexity-guidelines/specs/openspec-docs/README.md",
+      "openspec/changes/add-complexity-guidelines/tasks.md"
+    ],
+    "golden_code_paths": [
+      "src/core/templates/claude-template.ts",
+      "src/core/templates/readme-template.ts"
+    ]
+  },
+  {
+    "slug": "add-change-commands",
+    "archive_date": "2025-08-19",
+    "change_folder": "openspec/changes/add-change-commands",
+    "archive_folder": "openspec/changes/archive/2025-08-19-add-change-commands",
+    "before_sha": "9ff0e856931d25ec29aef6077d46c70734e712b4",
+    "after_sha": "0a611747bc7dbcf18a3d53d67c7ab79fd8cf5812",
+    "archive_sha": "7ced2a87916e7dd95d378d22f2356fb1321086fe",
+    "implementation_commits": [
+      {
+        "sha": "cfe6da96ac32fe5531a1711c5eeafc655dff3343",
+        "subject": "feat: add change command with show, list, and validate subcommands"
+      },
+      {
+        "sha": "1d3c292d94d8d5f61cdd0153433aa7028cafc370",
+        "subject": "fix: address code review feedback for change commands"
+      },
+      {
+        "sha": "8824bd2a4280f6b0205d5bf973b6c6066a2f2dae",
+        "subject": "feat: implement change-specific parser for delta format"
+      },
+      {
+        "sha": "0a611747bc7dbcf18a3d53d67c7ab79fd8cf5812",
+        "subject": "fix(change-validate): ensure delta specs emit requirements arrays; add missing Why/What sections and delta content for changes; refine removed requirement text and scenarios; all changes pass --strict validation"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/add-change-commands/design.md",
+      "openspec/changes/add-change-commands/proposal.md",
+      "openspec/changes/add-change-commands/specs/cli-change/spec.md",
+      "openspec/changes/add-change-commands/specs/cli-list/spec.md",
+      "openspec/changes/add-change-commands/tasks.md"
+    ],
+    "golden_code_paths": [
+      "CHANGE_VALIDATION_REPORT.md",
+      "src/cli/index.ts",
+      "src/commands/change.ts",
+      "src/core/converters/json-converter.ts",
+      "src/core/list.ts",
+      "src/core/parsers/change-parser.ts",
+      "src/core/parsers/markdown-parser.ts",
+      "src/core/schemas/change.schema.ts",
+      "src/core/validation/validator.ts"
+    ]
+  },
+  {
+    "slug": "add-interactive-show-command",
+    "archive_date": "2025-08-19",
+    "change_folder": "openspec/changes/add-interactive-show-command",
+    "archive_folder": "openspec/changes/archive/2025-08-19-add-interactive-show-command",
+    "before_sha": "21b5a3e680afc439283d33aea868e7b363137301",
+    "after_sha": "1e17cfdd0be9f1ae2056e090b3554b3880b7f5a3",
+    "archive_sha": "7ced2a87916e7dd95d378d22f2356fb1321086fe",
+    "implementation_commits": [
+      {
+        "sha": "a6c1a9016533245dff4f5d29e2d3bc41b32ace19",
+        "subject": "docs: consolidate retrospective documents into comprehensive analysis"
+      },
+      {
+        "sha": "5d185ba3a864126cbf36afc4529f5f000d0a3f3e",
+        "subject": "feat: add unified show command with interactive selection"
+      },
+      {
+        "sha": "1e17cfdd0be9f1ae2056e090b3554b3880b7f5a3",
+        "subject": "Address review"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/add-interactive-show-command/proposal.md",
+      "openspec/changes/add-interactive-show-command/specs/cli-change/spec.md",
+      "openspec/changes/add-interactive-show-command/specs/cli-show/spec.md",
+      "openspec/changes/add-interactive-show-command/specs/cli-spec/spec.md"
+    ],
+    "golden_code_paths": [
+      "OPENSPEC_COMPREHENSIVE_RETROSPECTIVE.md",
+      "OPENSPEC_SYSTEM_ISSUES_VS_USER_ERRORS.md",
+      "README_DOCUMENTATION_GAPS.md",
+      "RETROSPECTIVE_OPENSPEC_CHANGE_CREATION.md",
+      "src/cli/index.ts",
+      "src/commands/change.ts",
+      "src/commands/show.ts",
+      "src/commands/spec.ts",
+      "src/commands/validate.ts",
+      "src/utils/match.ts",
+      "test/commands/change.interactive-show.test.ts",
+      "test/commands/show.test.ts",
+      "test/commands/spec.interactive-show.test.ts",
+      "tsconfig.json"
+    ]
+  },
+  {
+    "slug": "add-skip-specs-archive-option",
+    "archive_date": "2025-08-19",
+    "change_folder": "openspec/changes/add-skip-specs-archive-option",
+    "archive_folder": "openspec/changes/archive/2025-08-19-add-skip-specs-archive-option",
+    "before_sha": "f192a97aeb095e4038ff24e86be5cce50e4a3634",
+    "after_sha": "0a611747bc7dbcf18a3d53d67c7ab79fd8cf5812",
+    "archive_sha": "7ced2a87916e7dd95d378d22f2356fb1321086fe",
+    "implementation_commits": [
+      {
+        "sha": "d7ebee45558eb2ceddda49838e501eb2f8e1da83",
+        "subject": "feat: add --skip-specs flag to archive command and fix confirmation behavior"
+      },
+      {
+        "sha": "d8cba03840e4d64f0235e2dc2c0ee1a8e1ac1f93",
+        "subject": "docs: enhance --skip-specs help text and add implementation notes"
+      },
+      {
+        "sha": "0a611747bc7dbcf18a3d53d67c7ab79fd8cf5812",
+        "subject": "fix(change-validate): ensure delta specs emit requirements arrays; add missing Why/What sections and delta content for changes; refine removed requirement text and scenarios; all changes pass --strict validation"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/add-skip-specs-archive-option/proposal.md",
+      "openspec/changes/add-skip-specs-archive-option/specs/cli-archive/spec.md",
+      "openspec/changes/add-skip-specs-archive-option/tasks.md"
+    ],
+    "golden_code_paths": [
+      "CHANGE_VALIDATION_REPORT.md",
+      "src/cli/index.ts",
+      "src/core/archive.ts",
+      "src/core/parsers/change-parser.ts",
+      "test/core/archive.test.ts"
+    ]
+  },
+  {
+    "slug": "add-spec-commands",
+    "archive_date": "2025-08-19",
+    "change_folder": "openspec/changes/add-spec-commands",
+    "archive_folder": "openspec/changes/archive/2025-08-19-add-spec-commands",
+    "before_sha": "ef1a6c0f0bdebb5937182da6ca98cc61c58996e6",
+    "after_sha": "0a611747bc7dbcf18a3d53d67c7ab79fd8cf5812",
+    "archive_sha": "7ced2a87916e7dd95d378d22f2356fb1321086fe",
+    "implementation_commits": [
+      {
+        "sha": "0a611747bc7dbcf18a3d53d67c7ab79fd8cf5812",
+        "subject": "fix(change-validate): ensure delta specs emit requirements arrays; add missing Why/What sections and delta content for changes; refine removed requirement text and scenarios; all changes pass --strict validation"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/add-spec-commands/design.md",
+      "openspec/changes/add-spec-commands/proposal.md",
+      "openspec/changes/add-spec-commands/specs/cli-spec/spec.md",
+      "openspec/changes/add-spec-commands/tasks.md"
+    ],
+    "golden_code_paths": [
+      "CHANGE_VALIDATION_REPORT.md",
+      "src/core/parsers/change-parser.ts"
+    ]
+  },
+  {
+    "slug": "add-zod-validation",
+    "archive_date": "2025-08-19",
+    "change_folder": "openspec/changes/add-zod-validation",
+    "archive_folder": "openspec/changes/archive/2025-08-19-add-zod-validation",
+    "before_sha": "3bedf6b23e66677a119e73befbf1ef29b7cd2f3c",
+    "after_sha": "151eddb7591339249a76bc1993da6a971d4159f4",
+    "archive_sha": "7ced2a87916e7dd95d378d22f2356fb1321086fe",
+    "implementation_commits": [
+      {
+        "sha": "cb0d6f3189d76061f207c6bf4634d78865ba1092",
+        "subject": "feat: add zod runtime validation for specs and changes"
+      },
+      {
+        "sha": "151eddb7591339249a76bc1993da6a971d4159f4",
+        "subject": "fix: address minor code review issues"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/add-zod-validation/design.md",
+      "openspec/changes/add-zod-validation/proposal.md",
+      "openspec/changes/add-zod-validation/specs/cli-archive/spec.md",
+      "openspec/changes/add-zod-validation/specs/cli-diff/spec.md",
+      "openspec/changes/add-zod-validation/tasks.md"
+    ],
+    "golden_code_paths": [
+      "package.json",
+      "pnpm-lock.yaml",
+      "src/cli/index.ts",
+      "src/core/archive.ts",
+      "src/core/converters/json-converter.ts",
+      "src/core/diff.ts",
+      "src/core/parsers/markdown-parser.ts",
+      "src/core/schemas/base.schema.ts",
+      "src/core/schemas/change.schema.ts",
+      "src/core/schemas/index.ts",
+      "src/core/schemas/spec.schema.ts",
+      "src/core/validation/constants.ts",
+      "src/core/validation/types.ts",
+      "src/core/validation/validator.ts",
+      "test/core/archive.test.ts",
+      "test/core/converters/json-converter.test.ts",
+      "test/core/parsers/markdown-parser.test.ts",
+      "test/core/validation.test.ts"
+    ]
+  },
+  {
+    "slug": "adopt-delta-based-changes",
+    "archive_date": "2025-08-19",
+    "change_folder": "openspec/changes/adopt-delta-based-changes",
+    "archive_folder": "openspec/changes/archive/2025-08-19-adopt-delta-based-changes",
+    "before_sha": "8a559e0d00506b27c9709d05aa3637db47afb44d",
+    "after_sha": "0a611747bc7dbcf18a3d53d67c7ab79fd8cf5812",
+    "archive_sha": "7ced2a87916e7dd95d378d22f2356fb1321086fe",
+    "implementation_commits": [
+      {
+        "sha": "4ab65d75dd727425a418d52533095e1d378e4452",
+        "subject": "feat: update conventions to support delta-based changes"
+      },
+      {
+        "sha": "c18f3b2b2e6c12e1cdfb3c7e29a170aaa7499dd5",
+        "subject": "feat(archive): apply delta-based updates with header matching, skeleton creation, atomic writes, and per-spec counts; add requirement-block parser; add tests covering normalization, order, validation, rename+modify, and multi-spec; update proposal and tasks with product decisions"
+      },
+      {
+        "sha": "f0b1e00c659ceb55b5dd922d76198920863d2554",
+        "subject": "Address review"
+      },
+      {
+        "sha": "0a611747bc7dbcf18a3d53d67c7ab79fd8cf5812",
+        "subject": "fix(change-validate): ensure delta specs emit requirements arrays; add missing Why/What sections and delta content for changes; refine removed requirement text and scenarios; all changes pass --strict validation"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/adopt-delta-based-changes/proposal.md",
+      "openspec/changes/adopt-delta-based-changes/specs/cli-archive/spec.md",
+      "openspec/changes/adopt-delta-based-changes/specs/cli-diff/spec.md",
+      "openspec/changes/adopt-delta-based-changes/specs/openspec-conventions/spec.md",
+      "openspec/changes/adopt-delta-based-changes/tasks.md"
+    ],
+    "golden_code_paths": [
+      "CHANGE_VALIDATION_REPORT.md",
+      "TEMP-archive-delta-gaps.md",
+      "src/core/archive.ts",
+      "src/core/parsers/change-parser.ts",
+      "src/core/parsers/requirement-blocks.ts",
+      "src/core/templates/readme-template.ts",
+      "test/core/archive.test.ts"
+    ]
+  },
+  {
+    "slug": "bulk-validation-interactive-selection",
+    "archive_date": "2025-08-19",
+    "change_folder": "openspec/changes/bulk-validation-interactive-selection",
+    "archive_folder": "openspec/changes/archive/2025-08-19-bulk-validation-interactive-selection",
+    "before_sha": "f9c1d07edb6aca5ab73222cd6fb4f9dd7a43ddf5",
+    "after_sha": "8ac50289f0e89816a70e7cfd5605b21863032623",
+    "archive_sha": "7ced2a87916e7dd95d378d22f2356fb1321086fe",
+    "implementation_commits": [
+      {
+        "sha": "0faf44807ed7bb0bfc9c414115b95b777cee1883",
+        "subject": "refactor: simplify change to modify existing command specs instead of creating new ones"
+      },
+      {
+        "sha": "a6c1a9016533245dff4f5d29e2d3bc41b32ace19",
+        "subject": "docs: consolidate retrospective documents into comprehensive analysis"
+      },
+      {
+        "sha": "1f295cec52180ebed1c52d0008a5f76e7817dbd9",
+        "subject": "feat: add unified validate command with interactive selection and bulk operations"
+      },
+      {
+        "sha": "8ac50289f0e89816a70e7cfd5605b21863032623",
+        "subject": "Add tests"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/bulk-validation-interactive-selection/proposal.md",
+      "openspec/changes/bulk-validation-interactive-selection/specs/cli-show/spec.md",
+      "openspec/changes/bulk-validation-interactive-selection/specs/cli-validate-all/spec.md",
+      "openspec/changes/bulk-validation-interactive-selection/specs/cli-validate/spec.md"
+    ],
+    "golden_code_paths": [
+      "OPENSPEC_COMPREHENSIVE_RETROSPECTIVE.md",
+      "OPENSPEC_SYSTEM_ISSUES_VS_USER_ERRORS.md",
+      "README_DOCUMENTATION_GAPS.md",
+      "RETROSPECTIVE_OPENSPEC_CHANGE_CREATION.md",
+      "src/cli/index.ts",
+      "src/commands/change.ts",
+      "src/commands/spec.ts",
+      "src/commands/validate.ts",
+      "src/core/parsers/change-parser.ts",
+      "src/utils/interactive.ts",
+      "src/utils/item-discovery.ts",
+      "test/commands/change.interactive-validate.test.ts",
+      "test/commands/spec.interactive-validate.test.ts",
+      "test/commands/validate.test.ts"
+    ]
+  },
+  {
+    "slug": "fix-update-tool-selection",
+    "archive_date": "2025-08-19",
+    "change_folder": "openspec/changes/fix-update-tool-selection",
+    "archive_folder": "openspec/changes/archive/2025-08-19-fix-update-tool-selection",
+    "before_sha": "d90eccf9593e3a7036cb396dd013006825612c22",
+    "after_sha": "0a611747bc7dbcf18a3d53d67c7ab79fd8cf5812",
+    "archive_sha": "7ced2a87916e7dd95d378d22f2356fb1321086fe",
+    "implementation_commits": [
+      {
+        "sha": "0b1be19302f9590ac466bfddc594356a16f3b07a",
+        "subject": "fix: update command respects existing AI tool files"
+      },
+      {
+        "sha": "0a611747bc7dbcf18a3d53d67c7ab79fd8cf5812",
+        "subject": "fix(change-validate): ensure delta specs emit requirements arrays; add missing Why/What sections and delta content for changes; refine removed requirement text and scenarios; all changes pass --strict validation"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/fix-update-tool-selection/proposal.md",
+      "openspec/changes/fix-update-tool-selection/specs/cli-update/spec.md",
+      "openspec/changes/fix-update-tool-selection/tasks.md"
+    ],
+    "golden_code_paths": [
+      "CHANGE_VALIDATION_REPORT.md",
+      "README.md",
+      "src/core/parsers/change-parser.ts",
+      "src/core/update.ts",
+      "test/core/update.test.ts"
+    ]
+  },
+  {
+    "slug": "structured-spec-format",
+    "archive_date": "2025-08-19",
+    "change_folder": "openspec/changes/structured-spec-format",
+    "archive_folder": "openspec/changes/archive/2025-08-19-structured-spec-format",
+    "before_sha": "fa5df9a32980db693eb9ef23bec02e19325def82",
+    "after_sha": "0a611747bc7dbcf18a3d53d67c7ab79fd8cf5812",
+    "archive_sha": "7ced2a87916e7dd95d378d22f2356fb1321086fe",
+    "implementation_commits": [
+      {
+        "sha": "0a611747bc7dbcf18a3d53d67c7ab79fd8cf5812",
+        "subject": "fix(change-validate): ensure delta specs emit requirements arrays; add missing Why/What sections and delta content for changes; refine removed requirement text and scenarios; all changes pass --strict validation"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/structured-spec-format/proposal.md",
+      "openspec/changes/structured-spec-format/specs/openspec-conventions/spec.md",
+      "openspec/changes/structured-spec-format/tasks.md"
+    ],
+    "golden_code_paths": [
+      "CHANGE_VALIDATION_REPORT.md",
+      "src/core/parsers/change-parser.ts"
+    ]
+  },
+  {
+    "slug": "add-multi-agent-init",
+    "archive_date": "2025-09-29",
+    "change_folder": "openspec/changes/add-multi-agent-init",
+    "archive_folder": "openspec/changes/archive/2025-09-29-add-multi-agent-init",
+    "before_sha": "7b0f4947540812616f643b42a2235ce4d41c5806",
+    "after_sha": "20b2fee74984add9b8e6ea74e1b3955bf59d1645",
+    "archive_sha": "17e4cf0dc64dcd019f8bcf478729177f796afef2",
+    "implementation_commits": [
+      {
+        "sha": "20b2fee74984add9b8e6ea74e1b3955bf59d1645",
+        "subject": "feat(init): support multi-select extend flow"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/add-multi-agent-init/proposal.md",
+      "openspec/changes/add-multi-agent-init/specs/cli-init/spec.md",
+      "openspec/changes/add-multi-agent-init/tasks.md"
+    ],
+    "golden_code_paths": [
+      "src/core/init.ts",
+      "test/core/init.test.ts",
+      "test/core/update.test.ts",
+      "test/utils/file-system.test.ts"
+    ]
+  },
+  {
+    "slug": "add-slash-command-support",
+    "archive_date": "2025-09-29",
+    "change_folder": "openspec/changes/add-slash-command-support",
+    "archive_folder": "openspec/changes/archive/2025-09-29-add-slash-command-support",
+    "before_sha": "68fc0499550b238f68d2819977ca96eec8c04711",
+    "after_sha": "dcfb6afe0c94c0c8abe6b2acfbc13800061f72c9",
+    "archive_sha": "17e4cf0dc64dcd019f8bcf478729177f796afef2",
+    "implementation_commits": [
+      {
+        "sha": "8c1b580f03d6f9ae43d9050b55f8bc37bc5c675d",
+        "subject": "feat(cli): add slash command support"
+      },
+      {
+        "sha": "dcfb6afe0c94c0c8abe6b2acfbc13800061f72c9",
+        "subject": "feat: add Opencode slash commands (#83)"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/add-slash-command-support/proposal.md",
+      "openspec/changes/add-slash-command-support/specs/cli-init/spec.md",
+      "openspec/changes/add-slash-command-support/specs/cli-update/spec.md",
+      "openspec/changes/add-slash-command-support/tasks.md"
+    ],
+    "golden_code_paths": [
+      "AGENTS.md",
+      "README.md",
+      "src/core/config.ts",
+      "src/core/configurators/slash/base.ts",
+      "src/core/configurators/slash/claude.ts",
+      "src/core/configurators/slash/cursor.ts",
+      "src/core/configurators/slash/opencode.ts",
+      "src/core/configurators/slash/registry.ts",
+      "src/core/init.ts",
+      "src/core/templates/index.ts",
+      "src/core/templates/readme-template.ts",
+      "src/core/templates/slash-command-templates.ts",
+      "src/core/update.ts",
+      "test/core/init.test.ts",
+      "test/core/update.test.ts"
+    ]
+  },
+  {
+    "slug": "improve-cli-e2e-plan",
+    "archive_date": "2025-09-29",
+    "change_folder": "openspec/changes/improve-cli-e2e-plan",
+    "archive_folder": "openspec/changes/archive/2025-09-29-improve-cli-e2e-plan",
+    "before_sha": "5a4837c37d8f069335ad5eb27f94a61ceac76b81",
+    "after_sha": "4867bfade51e52a587bff93da9138b166ee6298a",
+    "archive_sha": "17e4cf0dc64dcd019f8bcf478729177f796afef2",
+    "implementation_commits": [
+      {
+        "sha": "745845dd3e4813a29480bb4c7d88b4ba4af837c2",
+        "subject": "feat: implement Phase 1 E2E testing with cross-platform CI matrix"
+      },
+      {
+        "sha": "4867bfade51e52a587bff93da9138b166ee6298a",
+        "subject": "feat: implement Phase 1 E2E testing with cross-platform CI matrix (#80)"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/improve-cli-e2e-plan/proposal.md",
+      "openspec/changes/improve-cli-e2e-plan/tasks.md"
+    ],
+    "golden_code_paths": [
+      ".github/workflows/ci.yml",
+      "build.js",
+      "src/core/converters/json-converter.ts",
+      "src/core/validation/validator.ts",
+      "test/cli-e2e/basic.test.ts",
+      "test/commands/validate.test.ts",
+      "test/fixtures/tmp-init/openspec/changes/c1/proposal.md",
+      "test/fixtures/tmp-init/openspec/changes/c1/specs/alpha/spec.md",
+      "test/fixtures/tmp-init/openspec/specs/alpha/spec.md",
+      "test/helpers/run-cli.ts",
+      "vitest.setup.ts"
+    ]
+  },
+  {
+    "slug": "sort-active-changes-by-progress",
+    "archive_date": "2025-09-29",
+    "change_folder": "openspec/changes/sort-active-changes-by-progress",
+    "archive_folder": "openspec/changes/archive/2025-09-29-sort-active-changes-by-progress",
+    "before_sha": "332020ac6b9001a1522ca72c5a6d4433036cca7e",
+    "after_sha": "5b2049aedf59f996d7fdab04e35d3421ea9b706b",
+    "archive_sha": "17e4cf0dc64dcd019f8bcf478729177f796afef2",
+    "implementation_commits": [
+      {
+        "sha": "5b2049aedf59f996d7fdab04e35d3421ea9b706b",
+        "subject": "feat(view): sort active changes by progress"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/sort-active-changes-by-progress/proposal.md",
+      "openspec/changes/sort-active-changes-by-progress/specs/cli-view/spec.md",
+      "openspec/changes/sort-active-changes-by-progress/tasks.md"
+    ],
+    "golden_code_paths": [
+      "src/core/view.ts",
+      "test/core/update.test.ts",
+      "test/core/view.test.ts"
+    ]
+  },
+  {
+    "slug": "update-agent-file-name",
+    "archive_date": "2025-09-29",
+    "change_folder": "openspec/changes/update-agent-file-name",
+    "archive_folder": "openspec/changes/archive/2025-09-29-update-agent-file-name",
+    "before_sha": "9d7b44b72224409172dc48609b0487c666720190",
+    "after_sha": "4bbb52dda42c5f27cace62bd51f553a86dccab72",
+    "archive_sha": "17e4cf0dc64dcd019f8bcf478729177f796afef2",
+    "implementation_commits": [
+      {
+        "sha": "4bbb52dda42c5f27cace62bd51f553a86dccab72",
+        "subject": "feat: rename agent instructions file"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/update-agent-file-name/proposal.md",
+      "openspec/changes/update-agent-file-name/specs/cli-init/spec.md",
+      "openspec/changes/update-agent-file-name/specs/cli-update/spec.md",
+      "openspec/changes/update-agent-file-name/specs/openspec-conventions/spec.md",
+      "openspec/changes/update-agent-file-name/tasks.md"
+    ],
+    "golden_code_paths": [
+      "README.md",
+      "src/core/init.ts",
+      "src/core/templates/agents-template.ts",
+      "src/core/templates/claude-template.ts",
+      "src/core/templates/index.ts",
+      "src/core/templates/readme-template.ts",
+      "src/core/update.ts",
+      "src/utils/file-system.ts",
+      "test/core/init.test.ts",
+      "test/core/update.test.ts"
+    ]
+  },
+  {
+    "slug": "update-agent-instructions",
+    "archive_date": "2025-09-29",
+    "change_folder": "openspec/changes/update-agent-instructions",
+    "archive_folder": "openspec/changes/archive/2025-09-29-update-agent-instructions",
+    "before_sha": "1a3bfae784928bb029a9be6485686118c0affb6a",
+    "after_sha": "36eb0bbbf59dac9997aa84adcd215b5ca45f02ec",
+    "archive_sha": "17e4cf0dc64dcd019f8bcf478729177f796afef2",
+    "implementation_commits": [
+      {
+        "sha": "36eb0bbbf59dac9997aa84adcd215b5ca45f02ec",
+        "subject": "feat: streamline OpenSpec agent instructions by 48%"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/update-agent-instructions/design.md",
+      "openspec/changes/update-agent-instructions/proposal.md",
+      "openspec/changes/update-agent-instructions/tasks.md"
+    ],
+    "golden_code_paths": [
+      "src/core/templates/claude-template.ts"
+    ]
+  },
+  {
+    "slug": "update-markdown-parser-crlf",
+    "archive_date": "2025-09-29",
+    "change_folder": "openspec/changes/update-markdown-parser-crlf",
+    "archive_folder": "openspec/changes/archive/2025-09-29-update-markdown-parser-crlf",
+    "before_sha": "5a4837c37d8f069335ad5eb27f94a61ceac76b81",
+    "after_sha": "604ecb8bd10c2de398f3e7d63c18f29864be660c",
+    "archive_sha": "17e4cf0dc64dcd019f8bcf478729177f796afef2",
+    "implementation_commits": [
+      {
+        "sha": "cc25ca288dbb83923bac1b215fc448cdd9fca3d1",
+        "subject": "fix: normalize line endings in markdown parser to handle CRLF files"
+      },
+      {
+        "sha": "604ecb8bd10c2de398f3e7d63c18f29864be660c",
+        "subject": "fix: normalize line endings in markdown parser to handle CRLF files (#79)"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/update-markdown-parser-crlf/proposal.md",
+      "openspec/changes/update-markdown-parser-crlf/specs/cli-validate/spec.md",
+      "openspec/changes/update-markdown-parser-crlf/tasks.md"
+    ],
+    "golden_code_paths": [
+      "src/core/parsers/change-parser.ts",
+      "src/core/parsers/markdown-parser.ts",
+      "src/core/parsers/requirement-blocks.ts",
+      "test/commands/validate.test.ts",
+      "test/core/parsers/markdown-parser.test.ts"
+    ]
+  },
+  {
+    "slug": "add-codex-slash-command-support",
+    "archive_date": "2025-10-14",
+    "change_folder": "openspec/changes/add-codex-slash-command-support",
+    "archive_folder": "openspec/changes/archive/2025-10-14-add-codex-slash-command-support",
+    "before_sha": "8b3a39e45f02f359c04aedb94b8af33eff2ff513",
+    "after_sha": "6105211163612e8427943bdb1c44c91b8406426b",
+    "archive_sha": "5e995bc096aff55f61c12072e13141c4beea3baa",
+    "implementation_commits": [
+      {
+        "sha": "edbf9362739604d0a52d8d8cc6a5f979c4be1a8b",
+        "subject": "feat: add Codex slash command support"
+      },
+      {
+        "sha": "b2c61a10a77a7d38e07dfb595f695cbdedf9d8bb",
+        "subject": "feat: complete Codex slash command support implementation"
+      },
+      {
+        "sha": "9ae6141eb1e3a53b0d63c051dad12118baaafc6f",
+        "subject": "feat: Add codex custom slash command support (#120)"
+      },
+      {
+        "sha": "6105211163612e8427943bdb1c44c91b8406426b",
+        "subject": "feat: update Codex slash commands to use YAML frontmatter and $ARGUMENTS (#129)"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/add-codex-slash-command-support/proposal.md",
+      "openspec/changes/add-codex-slash-command-support/specs/cli-init/spec.md",
+      "openspec/changes/add-codex-slash-command-support/specs/cli-update/spec.md",
+      "openspec/changes/add-codex-slash-command-support/tasks.md"
+    ],
+    "golden_code_paths": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md",
+      "src/core/config.ts",
+      "src/core/configurators/slash/base.ts",
+      "src/core/configurators/slash/codex.ts",
+      "src/core/configurators/slash/registry.ts",
+      "src/core/init.ts",
+      "src/core/update.ts",
+      "test/core/init.test.ts",
+      "test/core/update.test.ts"
+    ]
+  },
+  {
+    "slug": "add-kilocode-workflows",
+    "archive_date": "2025-10-14",
+    "change_folder": "openspec/changes/add-kilocode-workflows",
+    "archive_folder": "openspec/changes/archive/2025-10-14-add-kilocode-workflows",
+    "before_sha": "970b9f6e2d414d6651a0af42bae1620dd745b69a",
+    "after_sha": "bc3666d702aaa8f773c19a52b6ff6c0c9e5e8cee",
+    "archive_sha": "5e995bc096aff55f61c12072e13141c4beea3baa",
+    "implementation_commits": [
+      {
+        "sha": "11b934d47248b3a2b2244b70c39d9e207b4890ba",
+        "subject": "feat: Add Kilo Code workflow support"
+      },
+      {
+        "sha": "bc3666d702aaa8f773c19a52b6ff6c0c9e5e8cee",
+        "subject": "feat: Add Kilo Code workflow support (#105)"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/add-kilocode-workflows/proposal.md",
+      "openspec/changes/add-kilocode-workflows/specs/cli-init/spec.md",
+      "openspec/changes/add-kilocode-workflows/specs/cli-update/spec.md",
+      "openspec/changes/add-kilocode-workflows/tasks.md"
+    ],
+    "golden_code_paths": [
+      "CHANGELOG.md",
+      "README.md",
+      "src/core/config.ts",
+      "src/core/configurators/slash/kilocode.ts",
+      "src/core/configurators/slash/registry.ts",
+      "src/core/templates/slash-command-templates.ts",
+      "src/core/validation/constants.ts",
+      "test/core/init.test.ts",
+      "test/core/update.test.ts"
+    ]
+  },
+  {
+    "slug": "update-release-automation",
+    "archive_date": "2025-10-14",
+    "change_folder": "openspec/changes/update-release-automation",
+    "archive_folder": "openspec/changes/archive/2025-10-14-update-release-automation",
+    "before_sha": "e0be11dd858ddb9c82eff941c5af7f798137004b",
+    "after_sha": "807b9d32a67b98d0fa7598550507d2f741acde7f",
+    "archive_sha": "f3eed6fab8c77d9cefd99c183b99338a6e189b22",
+    "implementation_commits": [
+      {
+        "sha": "14cd6b3da4e68e876962b07efe88cfb7f2c6097f",
+        "subject": "chore(release): phase 1 \u2013 wire up changesets action (dry-run publish) and GitHub release drafting"
+      },
+      {
+        "sha": "807b9d32a67b98d0fa7598550507d2f741acde7f",
+        "subject": "chore(release): phase 1 \u2013 wire changesets (dry-run), add npm auth config (#114)"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/update-release-automation/proposal.md",
+      "openspec/changes/update-release-automation/tasks.md"
+    ],
+    "golden_code_paths": [
+      ".github/workflows/release-prepare.yml"
+    ]
+  },
+  {
+    "slug": "add-config-command",
+    "archive_date": "2025-12-21",
+    "change_folder": "openspec/changes/add-config-command",
+    "archive_folder": "openspec/changes/archive/2025-12-21-add-config-command",
+    "before_sha": "4ff893048dc43a7829c96ef37eda02cc0389a867",
+    "after_sha": "5f5688d0700f86d35e3c6528c62a63725f940333",
+    "archive_sha": "c8e89fdb66a02245bc524615e8443ce6f68c0d59",
+    "implementation_commits": [
+      {
+        "sha": "5f5688d0700f86d35e3c6528c62a63725f940333",
+        "subject": "feat(cli): add openspec config command for global configuration management"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/add-config-command/proposal.md"
+    ],
+    "golden_code_paths": [
+      "src/cli/index.ts",
+      "src/commands/config.ts",
+      "src/core/completions/command-registry.ts",
+      "src/core/config-schema.ts",
+      "test/commands/config.test.ts",
+      "test/core/config-schema.test.ts"
+    ]
+  },
+  {
+    "slug": "add-artifact-workflow-cli",
+    "archive_date": "2025-12-28",
+    "change_folder": "openspec/changes/add-artifact-workflow-cli",
+    "archive_folder": "openspec/changes/archive/2025-12-28-add-artifact-workflow-cli",
+    "before_sha": "ac8f6d281cbf46ac63c63a0380e9e1e8924edb99",
+    "after_sha": "a91adbdbd7c5d688e9c576a1e11e2ac0f509933d",
+    "archive_sha": "9eb22410a901cc9ee856df493c4bc46b32a3efef",
+    "implementation_commits": [
+      {
+        "sha": "a91adbdbd7c5d688e9c576a1e11e2ac0f509933d",
+        "subject": "feat: implement artifact workflow CLI commands (Slice 4)"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/add-artifact-workflow-cli/design.md",
+      "openspec/changes/add-artifact-workflow-cli/proposal.md",
+      "openspec/changes/add-artifact-workflow-cli/specs/cli-artifact-workflow/spec.md",
+      "openspec/changes/add-artifact-workflow-cli/tasks.md"
+    ],
+    "golden_code_paths": [
+      "src/cli/index.ts",
+      "src/commands/artifact-workflow.ts"
+    ]
+  },
+  {
+    "slug": "add-instruction-loader",
+    "archive_date": "2025-12-28",
+    "change_folder": "openspec/changes/add-instruction-loader",
+    "archive_folder": "openspec/changes/archive/2025-12-28-add-instruction-loader",
+    "before_sha": "8dcd1707ee4ff19a739413e096406ab54a18fa01",
+    "after_sha": "bb97257d46757c79f5dbc49cd3a52fd7a070f01a",
+    "archive_sha": "7f2fd97c967eca06e09ca3745d3ff3db2d8f5966",
+    "implementation_commits": [
+      {
+        "sha": "bb97257d46757c79f5dbc49cd3a52fd7a070f01a",
+        "subject": "feat: add instruction loader for template loading and change context"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/add-instruction-loader/design.md",
+      "openspec/changes/add-instruction-loader/proposal.md",
+      "openspec/changes/add-instruction-loader/specs/instruction-loader/spec.md",
+      "openspec/changes/add-instruction-loader/tasks.md"
+    ],
+    "golden_code_paths": [
+      "src/core/artifact-graph/index.ts",
+      "src/core/artifact-graph/instruction-loader.ts",
+      "test/core/artifact-graph/instruction-loader.test.ts"
+    ]
+  },
+  {
+    "slug": "add-feedback-command",
+    "archive_date": "2026-02-17",
+    "change_folder": "openspec/changes/add-feedback-command",
+    "archive_folder": "openspec/changes/archive/2026-02-17-add-feedback-command",
+    "before_sha": "40afee643e4b036a24f1a5f86e261dc3f2f9f248",
+    "after_sha": "c86985d6ec5e2e2e6995ddbc3d61d81550eb7576",
+    "archive_sha": "4108563731fd5607c1b3bd9f781a9c4f44112034",
+    "implementation_commits": [
+      {
+        "sha": "c86985d6ec5e2e2e6995ddbc3d61d81550eb7576",
+        "subject": "feat: add feedback command for submitting user feedback (#509)"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/add-feedback-command/proposal.md",
+      "openspec/changes/add-feedback-command/specs/cli-feedback/spec.md",
+      "openspec/changes/add-feedback-command/tasks.md"
+    ],
+    "golden_code_paths": [
+      "src/cli/index.ts",
+      "src/commands/feedback.ts",
+      "src/core/completions/command-registry.ts",
+      "src/core/templates/skill-templates.ts",
+      "test/commands/feedback.test.ts"
+    ]
+  },
+  {
+    "slug": "add-verify-skill",
+    "archive_date": "2026-02-17",
+    "change_folder": "openspec/changes/add-verify-skill",
+    "archive_folder": "openspec/changes/archive/2026-02-17-add-verify-skill",
+    "before_sha": "05023dab43b5c415a9a6d5611eece5e5bf63b1e6",
+    "after_sha": "b5b7248610d0201ac59f4c0bbf3cea5517a6fe70",
+    "archive_sha": "4108563731fd5607c1b3bd9f781a9c4f44112034",
+    "implementation_commits": [
+      {
+        "sha": "b5b7248610d0201ac59f4c0bbf3cea5517a6fe70",
+        "subject": "feat(skills): implement /opsx:verify skill for validating change implementations (#501)"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/add-verify-skill/proposal.md",
+      "openspec/changes/add-verify-skill/specs/opsx-verify-skill/spec.md",
+      "openspec/changes/add-verify-skill/tasks.md"
+    ],
+    "golden_code_paths": [
+      "src/commands/artifact-workflow.ts",
+      "src/core/templates/skill-templates.ts"
+    ]
+  },
+  {
+    "slug": "merge-init-experimental",
+    "archive_date": "2026-02-17",
+    "change_folder": "openspec/changes/merge-init-experimental",
+    "archive_folder": "openspec/changes/archive/2026-02-17-merge-init-experimental",
+    "before_sha": "cf8b6212c8bf1e8c56aaf80ece02830d6de08b6f",
+    "after_sha": "39bebefcc49deb0bbef8bc1e6ba32f0392e5c75f",
+    "archive_sha": "4108563731fd5607c1b3bd9f781a9c4f44112034",
+    "implementation_commits": [
+      {
+        "sha": "39bebefcc49deb0bbef8bc1e6ba32f0392e5c75f",
+        "subject": "feat(cli): merge init and experimental commands (#565)"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/merge-init-experimental/.openspec.yaml",
+      "openspec/changes/merge-init-experimental/design.md",
+      "openspec/changes/merge-init-experimental/proposal.md",
+      "openspec/changes/merge-init-experimental/specs/cli-init/spec.md",
+      "openspec/changes/merge-init-experimental/specs/legacy-cleanup/spec.md",
+      "openspec/changes/merge-init-experimental/tasks.md"
+    ],
+    "golden_code_paths": [
+      "AGENTS.md",
+      "README.md",
+      "src/cli/index.ts",
+      "src/commands/experimental/index.ts",
+      "src/commands/experimental/instructions.ts",
+      "src/commands/experimental/new-change.ts",
+      "src/commands/experimental/schemas.ts",
+      "src/commands/experimental/setup.ts",
+      "src/commands/experimental/shared.ts",
+      "src/commands/experimental/status.ts",
+      "src/commands/experimental/templates.ts",
+      "src/commands/workflow/index.ts",
+      "src/commands/workflow/instructions.ts",
+      "src/commands/workflow/new-change.ts",
+      "src/commands/workflow/schemas.ts",
+      "src/commands/workflow/shared.ts",
+      "src/commands/workflow/status.ts",
+      "src/commands/workflow/templates.ts",
+      "src/core/configurators/agents.ts",
+      "src/core/configurators/base.ts",
+      "src/core/configurators/claude.ts",
+      "src/core/configurators/cline.ts",
+      "src/core/configurators/codebuddy.ts",
+      "src/core/configurators/costrict.ts",
+      "src/core/configurators/iflow.ts",
+      "src/core/configurators/qoder.ts",
+      "src/core/configurators/qwen.ts",
+      "src/core/configurators/registry.ts",
+      "src/core/configurators/slash/amazon-q.ts",
+      "src/core/configurators/slash/antigravity.ts",
+      "src/core/configurators/slash/auggie.ts",
+      "src/core/configurators/slash/base.ts",
+      "src/core/configurators/slash/claude.ts",
+      "src/core/configurators/slash/cline.ts",
+      "src/core/configurators/slash/codebuddy.ts",
+      "src/core/configurators/slash/codex.ts",
+      "src/core/configurators/slash/continue.ts",
+      "src/core/configurators/slash/costrict.ts",
+      "src/core/configurators/slash/crush.ts",
+      "src/core/configurators/slash/cursor.ts",
+      "src/core/configurators/slash/factory.ts",
+      "src/core/configurators/slash/gemini.ts",
+      "src/core/configurators/slash/github-copilot.ts",
+      "src/core/configurators/slash/iflow.ts",
+      "src/core/configurators/slash/kilocode.ts",
+      "src/core/configurators/slash/opencode.ts",
+      "src/core/configurators/slash/qoder.ts",
+      "src/core/configurators/slash/qwen.ts",
+      "src/core/configurators/slash/registry.ts",
+      "src/core/configurators/slash/roocode.ts",
+      "src/core/configurators/slash/toml-base.ts",
+      "src/core/configurators/slash/windsurf.ts",
+      "src/core/init.ts",
+      "src/core/init/wizard.ts",
+      "src/core/legacy-cleanup.ts",
+      "src/core/shared/index.ts",
+      "src/core/shared/skill-generation.ts",
+      "src/core/shared/tool-detection.ts",
+      "src/core/templates/agents-root-stub.ts",
+      "src/core/templates/agents-template.ts",
+      "src/core/templates/claude-template.ts",
+      "src/core/templates/cline-template.ts",
+      "src/core/templates/costrict-template.ts",
+      "src/core/templates/index.ts",
+      "src/core/templates/project-template.ts",
+      "src/core/templates/slash-command-templates.ts",
+      "src/core/update.ts",
+      "src/ui/welcome-screen.ts",
+      "src/utils/file-system.ts",
+      "src/utils/index.ts",
+      "test/cli-e2e/basic.test.ts",
+      "test/commands/artifact-workflow.test.ts",
+      "test/core/init.test.ts",
+      "test/core/legacy-cleanup.test.ts",
+      "test/core/shared/skill-generation.test.ts",
+      "test/core/shared/tool-detection.test.ts",
+      "test/core/update.test.ts",
+      "test/utils/marker-updates.test.ts"
+    ]
+  },
+  {
+    "slug": "schema-management-cli",
+    "archive_date": "2026-02-17",
+    "change_folder": "openspec/changes/schema-management-cli",
+    "archive_folder": "openspec/changes/archive/2026-02-17-schema-management-cli",
+    "before_sha": "84f372517f360d4b72a74c92c5f0bd638e7767a2",
+    "after_sha": "3cdcdfca8e84fa113ebcdd248fd8d6273af3bfa8",
+    "archive_sha": "4108563731fd5607c1b3bd9f781a9c4f44112034",
+    "implementation_commits": [
+      {
+        "sha": "3cdcdfca8e84fa113ebcdd248fd8d6273af3bfa8",
+        "subject": "feat(cli): add schema management commands (#525)"
+      }
+    ],
+    "prompt_paths": [
+      "openspec/changes/schema-management-cli/.openspec.yaml",
+      "openspec/changes/schema-management-cli/design.md",
+      "openspec/changes/schema-management-cli/proposal.md",
+      "openspec/changes/schema-management-cli/specs/schema-fork-command/spec.md",
+      "openspec/changes/schema-management-cli/specs/schema-init-command/spec.md",
+      "openspec/changes/schema-management-cli/specs/schema-validate-command/spec.md",
+      "openspec/changes/schema-management-cli/specs/schema-which-command/spec.md",
+      "openspec/changes/schema-management-cli/tasks.md"
+    ],
+    "golden_code_paths": [
+      "src/cli/index.ts",
+      "src/commands/schema.ts",
+      "src/core/completions/command-registry.ts",
+      "src/core/completions/types.ts",
+      "test/commands/schema.test.ts"
+    ]
+  }
+]

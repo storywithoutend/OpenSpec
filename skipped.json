@@ -1,0 +1,285 @@
+[
+  {
+    "slug": "add-list-command",
+    "archive_dir": "2025-01-13-add-list-command",
+    "reason": "no implementation commit found on this folder (implementation likely landed elsewhere)",
+    "commit_count": 1
+  },
+  {
+    "slug": "initialize-typescript-project",
+    "archive_dir": "2025-08-05-initialize-typescript-project",
+    "reason": "no implementation commit found on this folder (implementation likely landed elsewhere)",
+    "commit_count": 1
+  },
+  {
+    "slug": "add-init-command",
+    "archive_dir": "2025-08-06-add-init-command",
+    "reason": "no implementation commit found on this folder (implementation likely landed elsewhere)",
+    "commit_count": 7
+  },
+  {
+    "slug": "adopt-future-state-storage",
+    "archive_dir": "2025-08-06-adopt-future-state-storage",
+    "reason": "no implementation commit found on this folder (implementation likely landed elsewhere)",
+    "commit_count": 3
+  },
+  {
+    "slug": "add-archive-command",
+    "archive_dir": "2025-08-13-add-archive-command",
+    "reason": "no implementation commit found on this folder (implementation likely landed elsewhere)",
+    "commit_count": 2
+  },
+  {
+    "slug": "add-diff-command",
+    "archive_dir": "2025-08-13-add-diff-command",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "adopt-verb-noun-cli-structure",
+    "archive_dir": "2025-08-19-adopt-verb-noun-cli-structure",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "improve-validate-error-messages",
+    "archive_dir": "2025-08-19-improve-validate-error-messages",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "add-view-dashboard-command",
+    "archive_dir": "2025-09-12-add-view-dashboard-command",
+    "reason": "no pre-archive commits on change folder"
+  },
+  {
+    "slug": "add-agents-md-config",
+    "archive_dir": "2025-09-29-add-agents-md-config",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "improve-deterministic-tests",
+    "archive_dir": "2025-09-29-improve-deterministic-tests",
+    "reason": "no implementation commit found on this folder (implementation likely landed elsewhere)",
+    "commit_count": 2
+  },
+  {
+    "slug": "improve-init-onboarding",
+    "archive_dir": "2025-09-29-improve-init-onboarding",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "remove-diff-command",
+    "archive_dir": "2025-09-29-remove-diff-command",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "add-github-copilot-prompts",
+    "archive_dir": "2025-10-14-add-github-copilot-prompts",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "add-non-interactive-init-options",
+    "archive_dir": "2025-10-14-add-non-interactive-init-options",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "add-windsurf-workflows",
+    "archive_dir": "2025-10-14-add-windsurf-workflows",
+    "reason": "no implementation commit found on this folder (implementation likely landed elsewhere)",
+    "commit_count": 3
+  },
+  {
+    "slug": "enhance-validation-error-messages",
+    "archive_dir": "2025-10-14-enhance-validation-error-messages",
+    "reason": "no implementation commit found on this folder (implementation likely landed elsewhere)",
+    "commit_count": 2
+  },
+  {
+    "slug": "improve-agent-instruction-usability",
+    "archive_dir": "2025-10-14-improve-agent-instruction-usability",
+    "reason": "no implementation commit found on this folder (implementation likely landed elsewhere)",
+    "commit_count": 2
+  },
+  {
+    "slug": "slim-root-agents-file",
+    "archive_dir": "2025-10-14-slim-root-agents-file",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "update-cli-init-enter-selection",
+    "archive_dir": "2025-10-14-update-cli-init-enter-selection",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "update-cli-init-root-agents",
+    "archive_dir": "2025-10-14-update-cli-init-root-agents",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "add-archive-command-arguments",
+    "archive_dir": "2025-10-22-add-archive-command-arguments",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "add-cline-support",
+    "archive_dir": "2025-10-22-add-cline-support",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "add-crush-support",
+    "archive_dir": "2025-10-22-add-crush-support",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "add-factory-slash-commands",
+    "archive_dir": "2025-10-22-add-factory-slash-commands",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "add-shell-completions",
+    "archive_dir": "2025-11-06-add-shell-completions",
+    "reason": "no pre-archive commits on change folder"
+  },
+  {
+    "slug": "add-global-config-dir",
+    "archive_dir": "2025-12-20-add-global-config-dir",
+    "reason": "no implementation commit found on this folder (implementation likely landed elsewhere)",
+    "commit_count": 2
+  },
+  {
+    "slug": "extend-shell-completions",
+    "archive_dir": "2025-12-23-extend-shell-completions",
+    "reason": "no pre-archive commits on change folder"
+  },
+  {
+    "slug": "add-artifact-graph-core",
+    "archive_dir": "2025-12-24-add-artifact-graph-core",
+    "reason": "no implementation commit found on this folder (implementation likely landed elsewhere)",
+    "commit_count": 3
+  },
+  {
+    "slug": "add-change-manager",
+    "archive_dir": "2025-12-25-add-change-manager",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "restructure-schema-directories",
+    "archive_dir": "2025-12-28-restructure-schema-directories",
+    "reason": "no implementation commit found on this folder (implementation likely landed elsewhere)",
+    "commit_count": 3
+  },
+  {
+    "slug": "unify-change-state-model",
+    "archive_dir": "2025-12-29-unify-change-state-model",
+    "reason": "no pre-archive commits on change folder"
+  },
+  {
+    "slug": "add-antigravity-support",
+    "archive_dir": "2025-12-30-add-antigravity-support",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "fix-cline-workflows-implementation",
+    "archive_dir": "2025-12-30-fix-cline-workflows-implementation",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "add-agent-schema-selection",
+    "archive_dir": "2026-01-06-add-agent-schema-selection",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "add-per-change-schema-metadata",
+    "archive_dir": "2026-01-06-add-per-change-schema-metadata",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "add-specs-apply-command",
+    "archive_dir": "2026-01-06-add-specs-apply-command",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "make-apply-instructions-schema-aware",
+    "archive_dir": "2026-01-06-make-apply-instructions-schema-aware",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "opsx-archive-command",
+    "archive_dir": "2026-01-06-opsx-archive-command",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "add-nix-flake-support",
+    "archive_dir": "2026-01-07-add-nix-flake-support",
+    "reason": "no pre-archive commits on change folder"
+  },
+  {
+    "slug": "add-flake-update-script",
+    "archive_dir": "2026-01-09-add-flake-update-script",
+    "reason": "no pre-archive commits on change folder"
+  },
+  {
+    "slug": "add-posthog-analytics",
+    "archive_dir": "2026-01-09-add-posthog-analytics",
+    "reason": "no implementation commit found on this folder (implementation likely landed elsewhere)",
+    "commit_count": 1
+  },
+  {
+    "slug": "fix-codebuddy-frontmatter-fields",
+    "archive_dir": "2026-01-09-fix-codebuddy-frontmatter-fields",
+    "reason": "no pre-archive commits on change folder"
+  },
+  {
+    "slug": "add-nix-ci-validation",
+    "archive_dir": "2026-01-15-add-nix-ci-validation",
+    "reason": "no pre-archive commits on change folder"
+  },
+  {
+    "slug": "opencode-command-references",
+    "archive_dir": "2026-01-30-opencode-command-references",
+    "reason": "no pre-archive commits on change folder"
+  },
+  {
+    "slug": "add-opsx-onboard-skill",
+    "archive_dir": "2026-02-17-add-opsx-onboard-skill",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "multi-provider-skill-generation",
+    "archive_dir": "2026-02-17-multi-provider-skill-generation",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "project-config",
+    "archive_dir": "2026-02-17-project-config",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "project-local-schemas",
+    "archive_dir": "2026-02-17-project-local-schemas",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "add-kimi-cli-skills-only-support",
+    "archive_dir": "2026-04-23-add-kimi-cli-skills-only-support",
+    "reason": "no pre-archive commits on change folder"
+  },
+  {
+    "slug": "workspace-foundation",
+    "archive_dir": "2026-05-04-workspace-foundation",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "workspace-create-and-register-repos",
+    "archive_dir": "2026-05-06-workspace-create-and-register-repos",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "workspace-open-agent-context",
+    "archive_dir": "2026-05-06-workspace-open-agent-context",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  },
+  {
+    "slug": "workspace-change-planning",
+    "archive_dir": "2026-05-14-workspace-change-planning",
+    "reason": "first commit is already an implementation commit (no proposal-only state)"
+  }
+]

@@ -142,7 +142,13 @@ vite.config.ts.timestamp-*
 
 
 # Claude
-.claude/
+.claude/*
+!.claude/skills/
+!.claude/agents/
+.claude/skills/*
+.claude/agents/*
+!.claude/skills/eval-judge/
+!.claude/agents/eval-rubric-judge.md
 CLAUDE.md
 .DS_Store
 
